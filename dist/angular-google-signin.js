@@ -9,30 +9,40 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
      * @type {Object}
      */
     var a = {};
-    var b;
-    /**
-     * clientId
-     * @type {String}
-     */
-    a.clientId = null;
     this.setClientId = function(b) {
-        a.clientId = b;
+        a.client_id = b;
         return this;
     };
     this.getClientId = function() {
-        return a.clientId;
+        return a.client_id;
     };
-    /**
-     * apiKey
-     * @type {String}
-     */
-    a.apiKey = null;
-    this.setApiKey = function(b) {
-        a.apiKey = b;
+    this.setCookiePolicy = function(b) {
+        a.cookie_policiy = b;
         return this;
     };
-    this.getApiKey = function() {
-        return a.apiKey;
+    this.getCookiePolicy = function() {
+        return a.cookie_policiy;
+    };
+    this.setFetchBasicProfile = function(b) {
+        a.fetch_basic_profile = b;
+        return this;
+    };
+    this.getFetchBasicProfile = function() {
+        return a.fetch_basic_profile;
+    };
+    this.setHostedDomain = function(b) {
+        a.hosted_domain = b;
+        return this;
+    };
+    this.getHostedDomain = function() {
+        return a.hosted_domain;
+    };
+    this.setOpenIDRealm = function(b) {
+        a.openid_realm = b;
+        return this;
+    };
+    this.getOpenIDRealm = function() {
+        return a.openid_realm;
     };
     /**
      * Scopes
@@ -53,52 +63,62 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
     this.init = function(b) {
         angular.extend(a, b);
     };
-    this.loadCallback = function() {
-        gapi.load("auth2", function() {
-            b = gapi.auth2.init(a);
-        });
-    };
     /**
      * This defines the Google SignIn Service on run.
      */
-    this.$get = [ "$q", "$rootScope", "$timeout", function(a, c, d) {
+    this.$get = [ "$rootScope", function(b) {
+        var c;
         /**
-         * Define a deferred instance that will implement asynchronous calls
-         * @type {Object}
-         */
-        var e;
+       * NgGoogle Class
+       * Wraps most of the functionality of the Google Sign-In JavaScript
+       * SDK found at
+       * https://developers.google.com/identity/sign-in/web/reference
+       * @type {Class}
+       */
+        var d = function() {};
+        d.prototype.signIn = function(a) {
+            return c.signIn(a);
+        };
+        d.prototype.signOut = function() {
+            c.signOut();
+        };
+        d.prototype.grantOfflineAccess = function(a) {
+            return c.grantOfflineAccess(a);
+        };
+        d.prototype.isSignedIn = function() {
+            return c.isSignIn.get();
+        };
+        d.prototype.getUser = function() {
+            return c.currentUser.get();
+        };
+        d.prototype.disconnect = function() {
+            c.disconnect();
+        };
         /**
-         * NgGoogle Class
-         * @type {Class}
-         */
-        var f = function() {};
-        f.prototype.signIn = function(a) {
-            return b.signIn(a);
+       * This callback handles the onload callback for the GAPI lib
+       * @private
+       */
+        d.prototype._loadCallback = function() {
+            gapi.load("auth2", e);
         };
-        f.prototype.grantOfflineAccess = function(a) {
-            return b.grantOfflineAccess(a);
-        };
-        f.prototype.isSignedIn = function() {
-            return b.isSignIn.get();
-        };
-        f.prototype.getUser = function() {
-            return b.currentUser.get();
-        };
-        f.prototype.signOut = function() {
-            b.signOut();
-        };
-        f.prototype.disconnect = function() {
-            b.disconnect();
-        };
-        return new f();
+        return new d();
+        function e() {
+            c = gapi.auth2.init(a);
+            c.currentUser.listen(function(a) {
+                b.$broadcast("angular-google-signin:currentUser", a);
+            });
+            c.isSignedIn.listen(function(a) {
+                b.$broadcast("angular-google-signin:isSignedIn", a);
+            });
+        }
     } ];
 } ]).run([ "$window", "GoogleSignin", function(a, b) {
     // This needs to be on the window for the callback
-    a.startGoogleSignin = b.loadCallback;
+    a._startGoogleSignin = b._loadCallback;
     var c = document.createElement("script");
     c.type = "text/javascript";
     c.async = true;
-    c.src = "https://apis.google.com/js/client:platform.js?onload=startGoogleSignin";
+    c.src = "https://apis.google.com/js/client:platform.js?onload=_startGoogleSignin";
     var d = document.getElementsByTagName("script")[0];
     d.parentNode.insertBefore(c, d);
 } ]);
