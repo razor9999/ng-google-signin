@@ -80,7 +80,7 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
             return c.signIn(a);
         };
         d.prototype.signOut = function() {
-            c.signOut();
+            return c.signOut();
         };
         d.prototype.grantOfflineAccess = function(a) {
             return c.grantOfflineAccess(a);
@@ -90,6 +90,19 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
         };
         d.prototype.getUser = function() {
             return c.currentUser.get();
+        };
+        d.prototype.getBasicProfile = function() {
+            var a = this.getUser();
+            var b = null;
+            if (a) {
+                b = {
+                    id: a.getId(),
+                    name: a.getName(),
+                    image: a.getImageUrl(),
+                    email: a.getEmail()
+                };
+            }
+            return b;
         };
         d.prototype.disconnect = function() {
             c.disconnect();
@@ -106,9 +119,11 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
             c = gapi.auth2.init(a);
             c.currentUser.listen(function(a) {
                 b.$broadcast("angular-google-signin:currentUser", a);
+                b.$apply();
             });
             c.isSignedIn.listen(function(a) {
                 b.$broadcast("angular-google-signin:isSignedIn", a);
+                b.$apply();
             });
         }
     } ];
