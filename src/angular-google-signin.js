@@ -103,7 +103,7 @@ angular.module('google-signin', []).
       };
 
       NgGoogle.prototype.signOut = function () {
-        auth2.signOut();
+        return auth2.signOut();
       };
 
       NgGoogle.prototype.grantOfflineAccess = function (options) {
@@ -116,6 +116,23 @@ angular.module('google-signin', []).
 
       NgGoogle.prototype.getUser = function () {
         return auth2.currentUser.get();
+      };
+
+      NgGoogle.prototype.getBasicProfile = function () {
+        var currentUser = this.getUser();
+
+        var profile = null;
+
+        if(currentUser) {
+          profile = {
+            id:    currentUser.getId(),
+            name:  currentUser.getName(),
+            image: currentUser.getImageUrl(),
+            email: currentUser.getEmail()
+          };
+        }
+
+        return profile;
       };
 
       NgGoogle.prototype.disconnect = function () {
