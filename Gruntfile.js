@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
         files: {
-          'dist/angular-google-plus.min.js': ['src/angular-google-plus.js']
+          'dist/angular-google-signin.min.js': ['src/angular-google-signin.js']
         }
       },
       src: {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
           '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
         files: {
-          'dist/angular-google-plus.js': ['src/angular-google-plus.js']
+          'dist/angular-google-signin.js': ['src/angular-google-signin.js']
         }
       }
     },

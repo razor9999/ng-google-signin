@@ -1,11 +1,11 @@
 {
-  "name": "angular-google-plus",
-  "version": "0.1.2",
-  "homepage": "https://github.com/mrzmyr/angular-google-plus",
+  "name": "angular-google-signin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/astiusa/angular-google-signin",
   "authors": [
-    "Moritz Meyer <m0ritz.m3yer@gmail.com>"
+    "Ryan Tucker <ryan.tucker@asti-usa.com>"
   ],
-  "main": "dist/angular-google-plus.js",
+  "main": "dist/angular-google-signin.js",
   "license": "MIT",
   "ignore": [
     "**/.*",

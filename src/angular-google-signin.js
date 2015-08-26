@@ -72,7 +72,7 @@ angular.module('google-signin', []).
     this.loadCallback = function () {
       gapi.load('auth2', function () {
         auth2 = gapi.auth2.init(options);
-      })
+      });
     };
 
     /**

@@ -1,29 +1,28 @@
 {
-  "name": "angular-google-plus",
-  "version": "0.1.2",
-  "description": "A angular module which handles the login with the Google+ API",
+  "name": "angular-google-signin",
+  "version": "0.0.1",
+  "description": "A angular module which handles the login with Google Signin",
   "main": "Gruntfile.js",
   "scripts": {
     "test": "grunt karma:ci"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mrzmyr/angular-google-plus.git"
+    "url": "git://github.com/astiusa/angular-google-signin.git"
   },
   "keywords": [
     "google",
-    "plus",
+    "signin",
     "angular",
     "login",
     "api"
   ],
   "bugs": {
-    "url": "https://github.com/mrzmyr/angular-google-plus/issues"
+    "url": "https://github.com/astiusa/angular-google-signin/issues"
   },
-  "author": "Moritz Meyer <m0ritz.m3yer@gmail.com>",
+  "author": "Ryan Tucker <ryan.tucker@asti-usa.com>",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "e6875b80904f553b9f6fddae1efce1d5d7008483",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "^0.11.2",
