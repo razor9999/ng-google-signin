@@ -137,10 +137,12 @@ angular.module('google-signin', []).
 
         auth2.currentUser.listen(function (user) {
           $rootScope.$broadcast('angular-google-signin:currentUser', user);
+          $rootScope.$apply();
         });
 
         auth2.isSignedIn.listen(function (isSignedIn) {
           $rootScope.$broadcast('angular-google-signin:isSignedIn', isSignedIn);
+          $rootScope.$apply();
         });
       }
     }];
