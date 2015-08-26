@@ -92,7 +92,7 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
             return c.currentUser.get();
         };
         d.prototype.getBasicProfile = function() {
-            var a = this.getUser();
+            var a = this.getUser().getBasicProfile();
             var b = null;
             if (a) {
                 b = {

@@ -119,7 +119,7 @@ angular.module('google-signin', []).
       };
 
       NgGoogle.prototype.getBasicProfile = function () {
-        var currentUser = this.getUser();
+        var currentUser = this.getUser().getBasicProfile();
 
         var profile = null;
 
