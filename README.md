@@ -51,4 +51,4 @@ GoogleSignin) {
 
 #### Credits
 
-- Insperation from [angular-google-plus](https://github.com/mrzmyr/angular-google-plus)
+- Inspiration from [angular-google-plus](https://github.com/mrzmyr/angular-google-plus)
