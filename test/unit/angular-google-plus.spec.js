@@ -1,93 +1,257 @@
-describe('googlePlus Module specs', function () {
+describe('googleSignIn Module specs', function () {
+  var signedIn = false;
 
-  // mock global gapi object
-  window.gapi = {
-    auth: {
-      authorize: jasmine.createSpy(),
-      signOut: jasmine.createSpy()
-    }
+  // mocks
+  var GoogleUserProfile = {
+    getId: jasmine.createSpy().and.callFake(function() {
+      return '123';
+    }),
+    getName: jasmine.createSpy().and.callFake(function() {
+      return 'Bob Smith';
+    }),
+    getImageUrl: jasmine.createSpy().and.callFake(function() {
+      return 'www.example.com/pic.jpg';
+    }),
+    getEmail: jasmine.createSpy().and.callFake(function() {
+      return 'email@example.com';
+    })
   };
 
-  var googlePlus, GooglePlusProvider;
+  var GoogleUser = {
+    getBasicProfile: jasmine.createSpy().and.callFake(function() {
+      if(signedIn) {
+        return GoogleUserProfile;
+      } else {
+        return null;
+      }
+    })
+  };
+
+  var GoogleAuth = {
+    isSignedIn: {
+      get: jasmine.createSpy().and.callFake(function() {
+        return false;
+      }),
+      listen: jasmine.createSpy().and.callFake(function(cb) {
+        cb();
+      })
+    },
+    currentUser: {
+      get: jasmine.createSpy().and.callFake(function() {
+        return GoogleUser;
+      }),
+      listen: jasmine.createSpy().and.callFake(function(cb) {
+        cb();
+      })
+    },
+    then: jasmine.createSpy(),
+    signIn: jasmine.createSpy().and.callFake(function() {
+      return {
+        then: function() {}
+      }
+    }),
+    signOut: jasmine.createSpy().and.callFake(function() {
+      return {
+        then: function() {}
+      }
+    }),
+    disconnect: jasmine.createSpy(),
+    grantOfflineAccess: jasmine.createSpy().and.callFake(function() {
+      return {
+        then: function() {}
+      }
+    })
+  };
+
+  var auth2 = {
+    init: jasmine.createSpy().and.callFake(function() {
+      return GoogleAuth;
+    }),
+    GoogleAuth: GoogleAuth
+  };
+
+  window.gapi = {
+    auth2: auth2,
+    load: jasmine.createSpy().and.callFake(function(val, cb) {
+      cb();
+    })
+  };
+
+  var GoogleSignin, GoogleSigninProvider, $rootScope;
 
   beforeEach(function () {
-    module('googleplus', function (_GooglePlusProvider_) {
-      GooglePlusProvider = _GooglePlusProvider_;
-      GooglePlusProvider.init({
-        apiKey: 'daowpdmpomwa21o3no1in'
+    module('google-signin', function (_GoogleSigninProvider_) {
+      GoogleSigninProvider = _GoogleSigninProvider_;
+      GoogleSigninProvider.init({
+        client_id: 'abc123'
       });
     });
 
-    inject(function (_GooglePlus_) {
-      googlePlus = _GooglePlus_;
+    inject(function (_GoogleSignin_, _$rootScope_) {
+      GoogleSignin = _GoogleSignin_;
+      $rootScope = _$rootScope_;
+
+      spyOn($rootScope, "$broadcast").and.callThrough();
+      spyOn($rootScope, "$apply").and.callThrough();
     });
+
+    window._startGoogleSignin();
+
+    signedIn = false;
   });
 
   it('should exist', function () {
-    expect(!!GooglePlusProvider).toBeDefined();
+    expect(!!GoogleSigninProvider).toBeDefined();
   });
 
   describe('the provider api should provide', function () {
 
-    it("a working login", inject(function () {
+    describe("registered listeners", function() {
+      it("for the current user", inject(function() {
+        expect(GoogleAuth.currentUser.listen).toHaveBeenCalledWith(jasmine.any(Function));
+      }));
 
-      GooglePlusProvider.enableServerSide();
-      GooglePlusProvider.disableServerSide();
+      it("calls $broadcast for the current user", inject(function() {
+        expect($rootScope.$broadcast).toHaveBeenCalled();
+      }));
 
-      expect(googlePlus.login().then).toEqual(jasmine.any(Function));
+      it("calls $apply for the current user", inject(function() {
+        expect($rootScope.$apply).toHaveBeenCalled();
+      }));
 
-      expect(window.gapi.auth.authorize).toHaveBeenCalledWith({
-          client_id: GooglePlusProvider.getClientId(),
-          scope: GooglePlusProvider.getScopes(),
-          immediate: false,
-        }, googlePlus.handleAuthResult);
-    }));
+      it("for the sign-in status", inject(function() {
+        expect(GoogleAuth.isSignedIn.listen).toHaveBeenCalledWith(jasmine.any(Function));
+      }));
 
-    it("a working login with server-side enabled", inject(function () {
+      it("calls $broadcast for the sign-in status", inject(function() {
+        expect($rootScope.$broadcast).toHaveBeenCalled();
+      }));
 
-      GooglePlusProvider.enableServerSide();
+      it("calls $apply for the sign-in status", inject(function() {
+        expect($rootScope.$apply).toHaveBeenCalled();
+      }));
+    });
 
-      expect(googlePlus.login().then).toEqual(jasmine.any(Function));
+    describe("a working login", (function() {
+      it("without options", inject(function() {
+        expect(GoogleSignin.signIn().then).toEqual(jasmine.any(Function));
 
-      expect(window.gapi.auth.authorize).toHaveBeenCalledWith({
-          client_id: GooglePlusProvider.getClientId(),
-          scope: GooglePlusProvider.getScopes(),
-          immediate: false,
-          access_type: 'offline',
-          response_type: 'code token id_token gsession'
-        }, googlePlus.handleAuthResult);
+        expect(GoogleAuth.signIn).toHaveBeenCalledWith(undefined);
+      }));
+
+      it("with options", inject(function() {
+        expect(GoogleSignin.signIn({
+          client_id: 'xyz'
+        }).then).toEqual(jasmine.any(Function));
+
+        expect(GoogleAuth.signIn).toHaveBeenCalledWith({
+          client_id: 'xyz'
+        });
+      }));
     }));
 
     it("a working logout", inject(function () {
-      expect(googlePlus.logout());
-      expect(window.gapi.auth.signOut).toHaveBeenCalled();
+      expect(GoogleSignin.signOut().then).toEqual(jasmine.any(Function));
+      expect(GoogleAuth.signOut).toHaveBeenCalled();
     }));
 
-    it('appId as default value', function () {
-      expect(GooglePlusProvider.getClientId()).toBe(null);
+    describe("a working offline access grant", function() {
+      it("without options", inject(function() {
+        expect(GoogleSignin.grantOfflineAccess().then).toEqual(jasmine.any(Function));
+
+        expect(GoogleAuth.grantOfflineAccess).toHaveBeenCalledWith(undefined);
+      }));
+
+      it("with options", inject(function() {
+        expect(GoogleSignin.grantOfflineAccess({
+          client_id: 'xyz'
+        }).then).toEqual(jasmine.any(Function));
+
+        expect(GoogleAuth.grantOfflineAccess).toHaveBeenCalledWith({
+          client_id: 'xyz'
+        });
+      }));
     });
 
-    it('working getter / setter for appId', function () {
-      GooglePlusProvider.setClientId('123456789101112');
-      expect(GooglePlusProvider.getClientId()).toBe('123456789101112');
+    it('gets sign in status', inject(function() {
+      expect(GoogleSignin.isSignedIn()).toEqual(false);
+      expect(GoogleAuth.isSignedIn.get).toHaveBeenCalled();
+    }));
+
+    it("gets user", inject(function() {
+      expect(GoogleSignin.getUser()).toEqual(GoogleUser);
+      expect(GoogleAuth.currentUser.get).toHaveBeenCalled();
+    }));
+
+    describe("gets basic profile", function() {
+      it("when signed in", inject(function() {
+        signedIn = true;
+        var profile = GoogleSignin.getBasicProfile();
+
+        expect(GoogleUser.getBasicProfile).toHaveBeenCalled();
+        expect(GoogleUserProfile.getId).toHaveBeenCalled();
+        expect(GoogleUserProfile.getName).toHaveBeenCalled();
+        expect(GoogleUserProfile.getImageUrl).toHaveBeenCalled();
+        expect(GoogleUserProfile.getEmail).toHaveBeenCalled();
+
+        expect(profile).toEqual({
+          id: '123',
+          name: 'Bob Smith',
+          image: 'www.example.com/pic.jpg',
+          email: 'email@example.com'
+        });
+      }));
+
+      it("when signed out", inject(function() {
+        signedIn = false;
+        var profile = GoogleSignin.getBasicProfile();
+
+        expect(profile).toBe(null);
+      }));
     });
 
-    it('locale as default value', function () {
-      expect(GooglePlusProvider.getApiKey()).toBe('daowpdmpomwa21o3no1in');
+    it("disconnects the user", inject(function() {
+      GoogleSignin.disconnect();
+
+      expect(GoogleAuth.disconnect).toHaveBeenCalled();
+    }));
+
+    it('client id as default value', function () {
+      expect(GoogleSigninProvider.getClientId()).toBe('abc123');
     });
 
-    it('working getter / setter for locale', function () {
-      GooglePlusProvider.setApiKey('g4ilu32b42iub34piu32b4liu23b4i23');
-      expect(GooglePlusProvider.getApiKey()).toBe('g4ilu32b42iub34piu32b4liu23b4i23');
+    it('scopes as default value', function () {
+      expect(GoogleSigninProvider.getScopes()).toEqual(['profile', 'email']);
     });
 
-    it('status as default value', function () {
-      expect(GooglePlusProvider.getScopes()).toBe('https://www.googleapis.com/auth/plus.login');
+    it('working getter / setter for client id', function () {
+      GoogleSigninProvider.setClientId('xyz');
+      expect(GoogleSigninProvider.getClientId()).toEqual('xyz');
     });
 
-    it('working getter / setter for status', function () {
-      GooglePlusProvider.setScopes('https://www.googleapis.com/auth/plus.me');
-      expect(GooglePlusProvider.getScopes()).toBe('https://www.googleapis.com/auth/plus.me');
+    it('working getter / setter for cookie policy', function () {
+      GoogleSigninProvider.setCookiePolicy('none');
+      expect(GoogleSigninProvider.getCookiePolicy()).toEqual('none');
+    });
+
+    it('working getter / setter for fetch basic profile', function () {
+      GoogleSigninProvider.setFetchBasicProfile(false);
+      expect(GoogleSigninProvider.getFetchBasicProfile()).toEqual(false);
+    });
+
+    it('working getter / setter for hosted domain', function () {
+      GoogleSigninProvider.setHostedDomain('example.com');
+      expect(GoogleSigninProvider.getHostedDomain()).toEqual('example.com');
+    });
+
+    it('working getter / setter for OpenID Realm', function () {
+      GoogleSigninProvider.setOpenIDRealm('example.com');
+      expect(GoogleSigninProvider.getOpenIDRealm()).toEqual('example.com');
+    });
+
+    it('working getter / setter for scope', function () {
+      GoogleSigninProvider.setScopes(['profile', 'contacts']);
+      expect(GoogleSigninProvider.getScopes()).toEqual(['profile', 'contacts']);
     });
   });
 });

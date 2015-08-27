@@ -25,8 +25,17 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
+    preprocessors: {
+      '**/src/**/*.js': ['coverage']
+    },
+
+    coverageReporter: {
+      reporters: [
+        { type: 'html', subdir: 'report-html' }
+      ]
+    },
 
     // web server port
     port: 9876,
@@ -62,6 +71,12 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+    plugins: [
+      'karma-phantomjs-launcher',
+      'karma-jasmine',
+      'karma-coverage'
+    ]
   });
 };
