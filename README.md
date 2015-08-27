@@ -1,4 +1,4 @@
-angular-google-plus
+ng-google-plus
 ==================
 
 [![Build Status](https://travis-ci.org/mrzmyr/angular-google-plus.png)](https://travis-ci.org/mrzmyr/angular-google-plus) 
