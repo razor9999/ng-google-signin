@@ -48,18 +48,18 @@ describe('googleSignIn Module specs', function () {
     signIn: jasmine.createSpy().and.callFake(function() {
       return {
         then: function() {}
-      }
+      };
     }),
     signOut: jasmine.createSpy().and.callFake(function() {
       return {
         then: function() {}
-      }
+      };
     }),
     disconnect: jasmine.createSpy(),
     grantOfflineAccess: jasmine.createSpy().and.callFake(function() {
       return {
         then: function() {}
-      }
+      };
     })
   };
 

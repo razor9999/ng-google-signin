@@ -1,11 +1,11 @@
 {
-  "name": "angular-google-signin",
+  "name": "ng-google-signin",
   "version": "0.0.1",
-  "homepage": "https://github.com/astiusa/angular-google-signin",
+  "homepage": "https://github.com/astiusa/ng-google-signin",
   "authors": [
     "Ryan Tucker <ryan.tucker@asti-usa.com>"
   ],
-  "main": "dist/angular-google-signin.js",
+  "main": "dist/ng-google-signin.js",
   "license": "MIT",
   "ignore": [
     "**/.*",

@@ -1,5 +1,5 @@
 {
-  "name": "angular-google-signin",
+  "name": "ng-google-signin",
   "version": "0.0.1",
   "description": "A angular module which handles the login with Google Signin",
   "main": "Gruntfile.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/astiusa/angular-google-signin.git"
+    "url": "git://github.com/astiusa/ng-google-signin.git"
   },
   "keywords": [
     "google",
@@ -18,7 +18,7 @@
     "api"
   ],
   "bugs": {
-    "url": "https://github.com/astiusa/angular-google-signin/issues"
+    "url": "https://github.com/astiusa/ng-google-signin/issues"
   },
   "author": "Ryan Tucker <ryan.tucker@asti-usa.com>",
   "license": "MIT",

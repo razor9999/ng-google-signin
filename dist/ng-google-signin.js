@@ -1,4 +1,4 @@
-/*! angular-google-signin - v0.0.1 2015-08-27 */
+/*! ng-google-signin - v0.0.1 2015-08-27 */
 /**
  * google-signin module
  */
@@ -212,11 +212,11 @@ angular.module("google-signin", []).provider("GoogleSignin", [ function() {
         function f() {
             d = gapi.auth2.init(a);
             d.currentUser.listen(function(a) {
-                b.$broadcast("angular-google-signin:currentUser", a);
+                b.$broadcast("ng-google-signin:currentUser", a);
                 b.$apply();
             });
             d.isSignedIn.listen(function(a) {
-                b.$broadcast("angular-google-signin:isSignedIn", a);
+                b.$broadcast("ng-google-signin:isSignedIn", a);
                 b.$apply();
             });
         }
