@@ -1,6 +1,6 @@
 {
   "name": "ng-google-signin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A angular module which handles the login with Google Signin",
   "main": "Gruntfile.js",
   "scripts": {

@@ -1,15 +1,15 @@
 ng-google-plus
 ==================
 
-[![Build Status](https://travis-ci.org/mrzmyr/angular-google-plus.png)](https://travis-ci.org/mrzmyr/angular-google-plus) 
-[![Dependency Status](https://david-dm.org/mrzmyr/angular-google-plus.png)](https://david-dm.org/mrzmyr/angular-google-plus) 
-[![Dev Dependency Status](https://david-dm.org/mrzmyr/angular-google-plus/dev-status.png)](https://david-dm.org/mrzmyr/angular-google-plus#info=devDependencies&view=table) 
+[![Build Status](https://api.travis-ci.org/astiusa/ng-google-signin.png)](https://api.travis-ci.org/astiusa/ng-google-signin) 
+[![Dependency Status](https://david-dm.org/astiusa/ng-google-signin.png)](https://david-dm.org/astiusa/ng-google-signin) 
+[![Dev Dependency Status](https://david-dm.org/astiusa/ng-google-signin/dev-status.png)](https://david-dm.org/astiusa/ng-google-signin#info=devDependencies&view=table) 
 
-> A angular module which handles the login with the Google+ API
+> An angular module that handles login with the Google Signin API
 
 #### Demo
 
-Try [this demo](http://plnkr.co/edit/jvHVtNedJoPcqRKg8OLz?p=preview). _Remind that there is no `API Key` and `Client ID` inserted_
+Try [this demo](http://astiusa.github.io/ng-google-signin/demo).
 
 
 #### Install
@@ -17,29 +17,31 @@ Try [this demo](http://plnkr.co/edit/jvHVtNedJoPcqRKg8OLz?p=preview). _Remind th
 Install the angular module with bower.
 
 ```
-$ bower install angular-google-plus
+$ bower install ng-google-signin
+```
+
+Install the angular module with npm.
+
+```
+$ npm install ng-google-signin
 ```
 
 #### Usage
 
 ```js
-var app = angular.module('app', ['googleplus']);
+var app = angular.module('app', ['google-signin']);
 
-app.config(['GooglePlusProvider', function(GooglePlusProvider) {
-     GooglePlusProvider.init({
-        clientId: 'YOUR_CLIENT_ID',
-        apiKey: 'YOUR_API_KEY'
+app.config(['GoogleSigninProvider', function(GoogleSigninProvider) {
+     GoogleSigninProvider.init({
+        client_id: 'YOUR_CLIENT_ID',
      });
 }]);
 
-app.controller('AuthCtrl', ['$scope', 'GooglePlus', function ($scope, GooglePlus) {
+app.controller('AuthCtrl', ['$scope', 'GoogleSignin', function ($scope, 
+GoogleSignin) {
     $scope.login = function () {
-        GooglePlus.login().then(function (authResult) {
-            console.log(authResult);
-
-            GooglePlus.getUser().then(function (user) {
-                console.log(user);
-            });
+        GoogleSignin.signIn().then(function (user) {
+            console.log(user);
         }, function (err) {
             console.log(err);
         });
@@ -49,4 +51,4 @@ app.controller('AuthCtrl', ['$scope', 'GooglePlus', function ($scope, GooglePlus
 
 #### Credits
 
-- Insperation from [jakemmarsh's gist](https://gist.github.com/jakemmarsh/5809963)
+- Insperation from [angular-google-plus](https://github.com/mrzmyr/angular-google-plus)
